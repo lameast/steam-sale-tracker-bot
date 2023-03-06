@@ -1,9 +1,12 @@
 const Sequelize = require('sequelize');
-const db = require('../db');
+const db = require('../db/db');
 
 module.exports = db.define('game', {
-    id: Sequelize.INTEGER,
+    gameId: {
+        type: Sequelize.INTEGER,
+        primaryKey: true
+    },
     name: Sequelize.TEXT,
     discount: Sequelize.BOOLEAN,
-    discountPercent: Sequelize.INTEGER,
-});
+    discountPrice: Sequelize.TEXT,
+}, {timestamp: false});
