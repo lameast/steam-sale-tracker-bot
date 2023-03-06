@@ -19,7 +19,10 @@
   "homepage": "https://github.com/lameast/steam-sale-tracker-bot#readme",
   "dependencies": {
     "discord.js": "^14.7.1",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "sequelize": "^6.29.0",
+    "sqlite3": "^5.1.4",
+    "undici": "^5.20.0"
   },
   "devDependencies": {
     "eslint": "^8.35.0"
