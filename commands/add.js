@@ -1,8 +1,7 @@
 const {SlashCommandBuilder} = require("discord.js");
 const {request} = require('undici'); 
 const {Added, Game} = require('../models/models');
-//TODO: Allow maximum of 25 games to be added per user. This is the limit for the number of fields in an embed.
-//TODO: Check for free games.
+
 //TODO: Redo logic for checking if game is already in database to reduce api calls to steam.
 module.exports = {
     data: new SlashCommandBuilder()
@@ -29,6 +28,12 @@ module.exports = {
             //Game found
             const appResult = await request(`https://store.steampowered.com/api/appdetails?appids=${app.appid}`);
             const appDetails = await appResult.body.json();
+
+            if (!appDetails[app.appid]['data'].hasOwnProperty('price_overview')){
+                await interaction.editReply(`${game} is free so there is no need to add it to a sales tracker.`);
+                return;
+            }
+
             const priceOverview = appDetails[app.appid]['data']['price_overview'];
             const discountExists = true ? priceOverview["discount_percent"] > 0 : false;
             
@@ -44,9 +49,9 @@ module.exports = {
             const added = await Added.create({
                 user: interaction.user,
                 gameId: app.appid
-            })
+            });
 
-            await interaction.editReply(`Added ${game} to your list!`)
+            await interaction.editReply(`Added ${game} to your list!`);
         }
     }
 };
