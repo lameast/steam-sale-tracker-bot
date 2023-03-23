@@ -2,10 +2,14 @@ const {Client, Events, GatewayIntentBits, Collection} = require("discord.js");
 const fs = require('node:fs');
 const path = require('node:path');
 const dotenv = require("dotenv");
+const cron = require('node-cron');
+const {updateGames} = require('./utils');
 
 dotenv.config();
 
 const client = new Client({intents: [GatewayIntentBits.Guilds]});
+
+
 
 client.commands = new Collection();
 
@@ -23,7 +27,7 @@ for (const file of commandFiles){
 }
 
 const eventsPath = path.join(__dirname, 'events');
-const eventFiles = fs.readFileSync(eventsPath).filter(file => file.endsWith('.js'));
+const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
 for (const file of eventFiles){
     const filePath = path.join(eventsPath, file);
@@ -34,6 +38,11 @@ for (const file of eventFiles){
         client.on(event.name, (...args) => event.execute(...args));
     }
 }
+
+cron.schedule('0 0 * * *', () => {
+    //Scheduler to update database daily to check if games become discounted.
+    updateGames();
+})
 
 
 client.login(process.env.TOKEN);
