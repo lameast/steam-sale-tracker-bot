@@ -17,7 +17,7 @@ module.exports = {
             await interaction.editReply("There are no games on your list.")
         } else {
             const addedGameList = addedList.map(game => game.game.name);
-            await interaction.editReply(addedGameList.join(",") + " are on your list.");
+            await interaction.editReply("Your list contains: \n" + addedGameList.join("\n"));
         }
     }
 };
